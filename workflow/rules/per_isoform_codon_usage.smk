@@ -94,5 +94,8 @@ rule include_appris_annotation_per_isoform:
         # Create 'appris principal' column based on 'APPRIS Annotation'
         merged_df['appris principal'] = merged_df['APPRIS Annotation'].str.contains('PRINCIPAL')
 
+        # Create 'start found' column based on 'Not found tag'
+        merged_df['start found'] = ~merged_df['Not found tag'].str.contains('start', na=False)
+
         # Save the merged dataframe to a TSV file
         merged_df.to_csv(output.tsv, sep='\t')
