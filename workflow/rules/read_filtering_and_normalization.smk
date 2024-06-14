@@ -9,8 +9,8 @@ rule get_read_counts_after_filtering_for_coverage_coding_mt_in_RPM:
     run:
         import pandas as pd
 
-        # Convert cutoff from str to float
-        cutoff = float(wildcards.cutoff)
+        # Convert cutoff from str to int
+        cutoff = int(wildcards.cutoff)
 
         # Read the input TSV file
         df = pd.read_csv(input.tsv, sep='\t')
@@ -26,7 +26,7 @@ rule get_read_counts_after_filtering_for_coverage_coding_mt_in_RPM:
         for c in df.columns:
             if c not in non_gene_columns:
                 column_sum = df[c].sum()
-                df[c] = df[c] / column_sum
+                df[c] = df[c] * 1000000 / column_sum
 
         # Calculate the max value across the row, ignoring non-gene columns
         df['max'] = df.drop(columns=non_gene_columns).max(axis=1)
@@ -50,3 +50,15 @@ rule get_read_counts_after_filtering_for_coverage_coding_mt_in_RPM:
 
         # Save the processed DataFrame to a new TSV file
         df.to_csv(str(output.tsv), sep='\t', index=False)
+
+
+rule include_average_abundance:
+    input:
+        abundance_tsv = 'resources/normalized_counts/RPM_{cutoff}.tsv'
+    output:
+        abundance_tsv = 'resources/normalized_counts/RPM_{cutoff}_mean.tsv',
+    run:
+        import pandas as pd
+        abundance_df = pd.read_csv(input.abundance_tsv, sep='\t',  index_col = 'ENSG')
+        abundance_df['mean'] = abundance_df.loc[:, SAMPLES].mean(axis=1)
+        abundance_df.to_csv(str(output.abundance_tsv ), sep='\t')
