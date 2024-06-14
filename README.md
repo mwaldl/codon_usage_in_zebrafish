@@ -90,7 +90,7 @@ RPM        fraction
 ## run
 
 ```
-snakemake 'results/all_done.txt' -n 1
+snakemake 'results/all_done.txt' -c 1
 
 ```
 
