@@ -27,7 +27,7 @@ Note: On windows snakemakecan not be installed though bioconda, other means are 
 
 ### set up input files
 
-Input files should be provided within the `raw` folder:
+Input files should be provided within the following sub-folders of the  `raw` folder:
 
 - `gene_seqeunces`: fasta file with all zebrafish coding sequences as provided by ensembl (https://ftp.ensembl.org/pub/release-[releasID]/fasta/danio_rerio/cds/; adjust releaseID to fit your gene_counts file and appris annotation)
 
@@ -42,7 +42,7 @@ The tsv file has to include 3 columns with corresponding headers:
 
 - `sample`: containing the sample id;
 
-- `timepoint`: the 1-based index of the timepoint within the analysed time series at witch the samples was draw;
+- `timepoint`: the 1-based index of the time point within the analysed time series at witch the samples was draw;
 
 - `timepiont_name`: text description of the time point.
 
