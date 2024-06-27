@@ -7,6 +7,11 @@ pipeline used to analyse codon usage during zebrafish embryo development as pres
 
 To rerun the analysis, clone this git repository, install dependencies, copy input files to `raw` folder, set up sample meta data file and edit config file as needed.
 
+### clone workflow
+Download this workflow, e.g. with git clone:
+
+`git clone git@github.com:mwaldl/codon_usage_in_zebrafish.git`
+
 ### install dependencies with conda
 
 After installing conda (see: https://docs.anaconda.com/free/miniconda/miniconda-install), the required dependencies e.g. can be easily installed into a conda enviornment using the conda create:
@@ -29,11 +34,27 @@ Note: On windows snakemakecan not be installed though bioconda, other means are 
 
 Input files should be provided within the following sub-folders of the  `raw` folder:
 
-- `gene_seqeunces`: fasta file with all zebrafish coding sequences as provided by ensembl (https://ftp.ensembl.org/pub/release-[releasID]/fasta/danio_rerio/cds/; adjust releaseID to fit your gene_counts file and appris annotation)
+- `gene_seqeunces`: a fasta file with all zebrafish coding sequences as provided by ensembl (https://ftp.ensembl.org/pub/release-[releasID]/fasta/danio_rerio/cds/; adjust releaseID to fit your gene_counts file and appris annotation)
 
-- `gene_counts`: file with gene counts per sample. It contains one row per gene; one column stating the `GeneType`, eg "protein coding" or "rRNA"; one column stating `GeneSymbol`, one column with the ensembl gene id (`ENSG`) and one column per sample respresenting the read count per gene.
+- `gene_counts`: a file with gene counts per sample. It contains one row per gene; one column stating the `GeneType`, eg "protein coding" or "rRNA"; one column stating `GeneSymbol`, one column with the ensembl gene id (`ENSG`) and one column per sample respresenting the read count per gene.
 
-- `apris_data`: isoform annotation from appris (https://apprisws.bioinfo.cnio.es/pub/current_release/datafiles/danio_rerio/GRCz11/appris_data.appris.txt [as 16th of June 2024: ensembl104]
+- `apris_data`: a file with isoform annotation from appris (https://apprisws.bioinfo.cnio.es/pub/current_release/datafiles/danio_rerio/GRCz11/appris_data.appris.txt [as 16th of June 2024: ensembl104]
+
+### set up config
+
+The input files and some parameters are specified in the `config.yaml` file found in `config` folder. 
+
+- `gene_isoforms_fasta`: 'Danio_rerio.GRCz11.cds.all.fa' -- name of fasta file with all zebrafish coding sequences located with in the raw/gene_seqeunces folder
+
+- `appris_annotation`: 'appris_data.appris.txt' -- name of appris annotation file located with in the raw/apris_data folder
+
+- `samples_tsv`: 'config/samples.tsv' -- path to file with sample meta data as described in "set up sample meta data" section
+
+- `raw_sequencing_counts`: 'raw_gene_counts_GeneSymbols_GeneTypes.tsv' -- name of gene counts file located with in the raw/gene_counts folder
+
+- `isoform_selection`: 'priority_principal_triple_longest' -- method for selecting representative isoform of gene
+
+- `RPM_cutoff`: 0 -- minimum coverage in RPM of a gene to be included in analyses
 
 ### set up sample meta data
 
@@ -61,36 +82,23 @@ EV06010	3	4-cell, 1 hpf
 ...
 ```
 
-### set up config
+## run the pipeline
 
-The input files and some parameters are specified in the `config.yaml` file found in `config` folder.
+1. Activate the newly set up conda environment if it is not yet activated:
+   ```
+   conda activate codonusage
 
-- `gene_isoforms_fasta`: 'Danio_rerio.GRCz11.cds.all.fa' -- name of fasta file with all zebrafish coding sequences
+   ```
 
-- `appris_annotation`: 'appris_data.appris.txt' -- name of appris annotation file
+2. Navigate to the workflow folder:
+   ```
+   cd codon_usage_in_zebrafish
 
-- `samples_tsv`: 'config/samples.tsv' -- path to file with sample meta data as described in "set up sample meta data" section
+   ```
 
-- `raw_sequencing_counts`: 'raw_gene_counts_GeneSymbols_GeneTypes.tsv' -- name of gene counts file
+3. Run the pipeline:
+   ```
+   snakemake 'results/all_done.txt' -c 2
 
-- `isoform_selection`: 'priority_principal_triple_longest' -- method for selecting representative isoform of gene
-
-- `RPM_cutoff`: .000010 -- minimum coverage of a gene to be included in analyses
-
-```
-RPM        fraction
-0000000    .000000
-0000001    .000001
-0000010    .000010
-0000100    .000100
-0001000    .001000
-1000000    1
-```
-
-## run
-
-```
-snakemake 'results/all_done.txt' -c 1
-
-```
-
+   ```
+   replace '2' with wathever number of cores you want to use
