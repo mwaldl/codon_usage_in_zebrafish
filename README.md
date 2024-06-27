@@ -102,3 +102,21 @@ EV06010	3	4-cell, 1 hpf
 
    ```
    replace '2' with wathever number of cores you want to use
+
+## output
+
+### codon usage per time point
+Codon usage per time point and per sample is provided as tsv file and as heatmap in the results/codon_usage_per-timepoint folder. The file name consists of four parts: a descriptor for the method used to select the principle isoform, wether the data is provided per sample or as mean over three samples per time point, wether the rows ar sorted and labled by codon or by the name of the decoded amino accid and if the file contains the data table or the heatmap. `<isoform selection method>_isoform_<time/sample>_vs_<codon/aminoacid_codon>.<pdf/tsv>`
+
+### comaprison of isoform selection methods
+The folder results/method_comparison contains two heatmaps that show the mean codon fraction over all samples coputed with different isoform selection methods. The file 'method_cu_fraction.pdf' shows the fraction that each codon contributes. The file 'method_cu_count.pdf' shows the rsult of multiplying the codon count in each gene with the abundance of each gene. The first plots shows no major differnces between methods, while the second methods shows variations in the total number of codons. The correspodning data files can be found in the resources/method_comparisonfolder.
+
+### pca
+
+PCA was performed for gene expression levels as well as codon fractions. 
+
+The PCA on gene expression levels only considers genomic protein coding genes (see tsv file in resources/normalized_counts folder). It is performed for per sample gene expression data and on the mean gene expression level per time point. Accordingly, the results are found in results/pca/gene_expression/sample and results/pca/gene_expression/timepoint. A two 2D plot of the first two components is shown in pca.pdf; the explained variance per component is plotted in explained_variance.pdf and the genes that represent at least 10% to a component are shown in explained_variance.pdf_feature_contribution_bar.pdf, where the first plot represents the first component, second plot the second component etc. 
+
+The PCA on codon usage is located in the results/pca/codon_usage folder, seperated by subfolders based on the isoform selction method. The pca.pdf, explained_variance.pdf and explained_variance.pdf_feature_contribution_bar.pdf files are produced analogously to the gene expression PCA plots. Contributions to PCs are of course  codons fractions rather than gene expression fractions.
+
+
